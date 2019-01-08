@@ -1,0 +1,20 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Update apt
+      apt: update_cache=yes
+
+    - name: Install Apache
+      apt: name=apache2 state=latest
+
+    - name: Delete default eth0
+      shell: ip route del default dev eth0
+    - name: Add default eth1
+      shell: ip route add default via 10.0.0.1 dev eth1
+
+    - name: Start Apache service
+      service:
+        name: apache2
+        state: started
+        enabled: yes

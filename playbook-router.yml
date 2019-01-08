@@ -1,0 +1,40 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Update apt
+      apt: update_cache=yes
+
+    - name: Install dnsmasq
+      apt: name=dnsmasq state=present
+
+    - name: Install iptables
+      apt: name=iptables
+
+    - name: Enable ip forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: 1
+        state: present
+        reload: True
+
+    - name: Configure NAT
+      iptables:
+        table: nat
+        chain: POSTROUTING
+        out_interface: eth1
+        jump: MASQUERADE
+
+    - name: Copy dnsmasq conf file
+      copy:
+        src: templates/dnsmasq.conf
+        dest: /etc/dnsmasq.conf
+    - name: Copy dnsmaq hosts file
+      copy:
+        src: templates/dnsmasq-hosts
+        dest: /etc/dnsmasq-hosts
+
+    - name: Restart dnsmasq
+      service:
+        name: dnsmasq
+        state: restarted
