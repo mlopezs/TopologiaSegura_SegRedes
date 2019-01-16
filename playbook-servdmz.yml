@@ -8,6 +8,9 @@
     - name: Install Apache
       apt: name=apache2 state=latest
 
+    - name: Install Cups
+      apt: name=cups
+
     - name: Delete default eth0
       shell: ip route del default dev eth0
     - name: Add default eth1
@@ -16,5 +19,11 @@
     - name: Start Apache service
       service:
         name: apache2
+        state: started
+        enabled: yes
+
+    - name: Start Printing service
+      service:
+        name: cups
         state: started
         enabled: yes
