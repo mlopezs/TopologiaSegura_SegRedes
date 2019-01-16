@@ -1,0 +1,12 @@
+iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+iptables -P INPUT DROP
+iptables -P OUTPUT DROP
+iptables -P FORWARD DROP
+iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+iptables -A INPUT -i eth3 -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+iptables -A OUTPUT -o eth3 -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+iptables -A INPUT -i eth0 -p tcp --dport 22 -j ACCEPT
