@@ -25,7 +25,6 @@
       copy:
         src: iptables-rules
         dest: /etc/iptables/rules.v4
-      notify: iptables restore
 
     - name: Copy dnsmasq conf file
       copy:
@@ -41,7 +40,5 @@
         name: dnsmasq
         state: restarted
 
-  handlers:
-    - name: Restore iptables
+    - name: Restore iptables rules
       shell: iptables-restore /etc/iptables/rules.v4
-      listen: "iptables restore"
